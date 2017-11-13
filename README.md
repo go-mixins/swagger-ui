@@ -21,6 +21,10 @@ http.Handle(swagger.Handler(func()([]byte, error) {
 http.ListenAndServe(":8080", nil)
 ```
 
+## Tools used
+
+To re-generate embedded UI files [esc](https://github.com/mjibson/esc) tool must be installed.
+
 ## LICENSE
 
 See [Swagger UI license](https://github.com/swagger-api/swagger-ui/blob/master/LICENSE).
