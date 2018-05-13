@@ -20,6 +20,7 @@
 package swagger
 
 import (
+	"mime"
 	"net/http"
 	"os"
 	"strconv"
@@ -30,6 +31,7 @@ var h = http.FileServer(_escDir(false, ""))
 // Handler provides http.Handler that serves swagger-ui directory contents or
 // swagger.json as a result of specified function
 func Handler(json func() ([]byte, error)) http.HandlerFunc {
+	mime.AddExtensionType(".svg", "image/svg+xml")
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/swagger.json" {
 			data, err := json()
