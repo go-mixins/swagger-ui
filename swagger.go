@@ -20,13 +20,16 @@
 package swagger
 
 import (
+	"embed"
+	"io/fs"
 	"mime"
 	"net/http"
 	"os"
 	"strconv"
 )
 
-var h = http.FileServer(_escDir(false, ""))
+//go:embed swagger-ui
+var SwaggerFS embed.FS
 
 // Handler provides http.Handler that serves swagger-ui directory contents or
 // swagger.json as a result of specified function
@@ -44,8 +47,10 @@ func Handler(json func() ([]byte, error)) http.HandlerFunc {
 			w.Write(data)
 			return
 		}
-		h.ServeHTTP(w, r)
+		fsys, err := fs.Sub(SwaggerFS, "swagger-ui")
+		if err != nil {
+			return
+		}
+		http.FileServer(http.FS(fsys)).ServeHTTP(w, r)
 	}
 }
-
-//go:generate esc -private -o assets.go -prefix swagger-ui -pkg swagger swagger-ui
